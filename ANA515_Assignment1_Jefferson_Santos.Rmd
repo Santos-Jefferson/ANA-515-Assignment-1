@@ -1,0 +1,46 @@
+---
+title: "ANA 515 Assignment 1"
+author: "Jefferson Santos"
+date: "10/19/2021"
+output:
+  html_document:
+    theme:
+      bootswatch: "litera"
+---
+
+```{r, echo = FALSE}
+## Getting the csv data from github and saving to an object/variable
+url <- "https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv"
+guns_data <- read.csv(url)
+```
+
+```{r setup, include = FALSE}
+## Importing necessary libraries for this script/code
+library(tidyverse)
+library(knitr)
+library(bslib)
+```
+
+```{r, include = FALSE}
+## Filtering the data (age <= 65)
+age_lt_65<-filter(guns_data, age<=65)
+glimpse(age_lt_65)
+
+## Getting the difference between rows (original data and youth data)
+data_diff<-(nrow(guns_data)-nrow(age_lt_65))
+```
+
+We have data about `r nrow(guns_data)` individuals killed by guns. Only `r data_diff` are older than 65. The distribution of the remainder is shown below:
+
+```{r youth-dist, echo=FALSE}
+## Plotting data (distribution of the age column)
+age_lt_65 %>%
+ggplot(aes(age)) + geom_freqpoly(binwidth = 1)
+```
+
+```{r race-dist, echo = FALSE}
+## Plotting data (distribution of the age column by race)
+age_lt_65 %>%
+ggplot(aes(fct_infreq(race) %>% fct_rev())) + geom_bar() + coord_flip() + labs(x = "Victim race")
+
+```
